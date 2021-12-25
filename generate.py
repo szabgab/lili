@@ -69,6 +69,15 @@ for course in courses:
     os.chdir(current_dir)
     links += f'''<li><a href="{course['tdir']}">{course['tdir']}</a></li>\n'''
 
+current_dir = os.getcwd()
+os.chdir('LibreLingo')
+tdir = 'basque-from-english'
+docs_dir = os.path.join(current_dir, 'docs', tdir)
+cmd = f"python {current_dir}/LibreLingo-tools/lili.py --course courses/basque-from-english --html {docs_dir}"
+print(cmd)
+assert os.system(cmd) == 0
+links += f'''<li><a href="basque-from-english">basque-from-english</a></li>\n'''
+os.chdir(current_dir)
 
 html = f"""
 <html>
