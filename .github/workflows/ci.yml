@@ -36,7 +36,9 @@ jobs:
       run: |
           python -V
           pip install -r requirements.txt
-          pip install -r LibreLingo-tools/requirements.txt
+          #pip install -r LibreLingo-tools/requirements.txt
+          cd LibreLingo/apps/librelingo_yaml_loader; pip install .
+          cd LibreLingo/apps/librelingo_json_export; pip install .
 
     - name: Generate HTML pages
       run: |
