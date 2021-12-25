@@ -38,11 +38,11 @@ jobs:
           pip install -r requirements.txt
           pip install -r LibreLingo-tools/requirements.txt
 
-    - name: Check course
+    - name: Generate HTML pages
       run: |
           python generate.py
 
-    - name: Commit new page
+    - name: Commit new files
       if: github.repository == 'szabgab/lili'
       run: |
         GIT_STATUS=$(git status --porcelain)
@@ -52,3 +52,4 @@ jobs:
         git add docs/
         if [ "$GIT_STATUS" != "" ]; then git commit -m "Automated Web page generation"; fi
         if [ "$GIT_STATUS" != "" ]; then git push; fi
+
