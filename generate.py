@@ -65,7 +65,7 @@ for course in courses:
     current_dir = os.getcwd()
     os.chdir(course_dir)
     docs_dir = os.path.join(current_dir, 'docs', course['tdir'])
-    os.system(f"python {current_dir}/LibreLingo-tools/lili.py --course course --html {docs_dir}")
+    assert os.system(f"python {current_dir}/LibreLingo-tools/lili.py --course course --html {docs_dir}") == 0
     os.chdir(current_dir)
     links += f'''<li><a href="{course['tdir']}">{course['tdir']}</a></li>\n'''
 
