@@ -6,9 +6,9 @@ on:
     - cron: '9 * * * *'
 
 jobs:
-  verify:
+  generate:
     runs-on: ubuntu-latest
-    name: Verify course
+    name: Generate HTML
 
     steps:
     - name: Set up Python
