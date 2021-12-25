@@ -11,9 +11,24 @@ now = datetime.datetime.now()
 
 courses = [
     {
+        'url': 'https://github.com/kantord/LibreLingo-ES-from-EN/archive/refs/heads/main.zip',
+        'sdir': 'LibreLingo-ES-from-EN-main',
+        'tdir': 'spanish-from-english',
+    },
+    {
         'url': 'https://github.com/szabgab/LibreLingo-Judeo-Spanish-from-English/archive/refs/heads/main.zip',
         'sdir': 'LibreLingo-Judeo-Spanish-from-English-main',
         'tdir': 'ladino-from-english',
+    },
+    {
+        'url': 'https://github.com/szabgab/LibreLingo-Judeo-Spanish-from-Hebrew/archive/refs/heads/main.zip',
+        'sdir': 'LibreLingo-Judeo-Spanish-from-Hebrew-main',
+        'tdir': 'ladino-from-hebrew',
+    },
+    {
+        'url': 'https://github.com/szabgab/LibreLingo-Judeo-Spanish-from-Spanish/archive/refs/heads/main.zip',
+        'sdir': 'LibreLingo-Judeo-Spanish-from-Spanish-main',
+        'tdir': 'ladino-from-spanish',
     },
     {
         'url': 'https://codeberg.org/Lamdarer/LibreLingo-DE-from-EN/archive/main.zip',
@@ -21,9 +36,6 @@ courses = [
         'tdir': 'german-from-english',
     },
 ]
-#https://github.com/kantord/LibreLingo-ES-from-EN/archive/refs/heads/main.zip spanish-from-english
-#https://github.com/szabgab/LibreLingo-Judeo-Spanish-from-Spanish/archive/refs/heads/main.zip" ladino-from-spanish
-#https://github.com/szabgab/LibreLingo-Judeo-Spanish-from-Hebrew/archive/refs/heads/main.zip" ladino-from-hebrew
 
 print(root.name)
 
