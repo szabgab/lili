@@ -45,7 +45,7 @@ jobs:
 
     - name: Generate HTML pages
       run: |
-          python generate.py
+          python generate.py --outdir docs
 
     - name: Commit new files
       if: github.repository == 'szabgab/lili'
