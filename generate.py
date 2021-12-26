@@ -40,9 +40,11 @@ courses = [
 
 print(root.name)
 
-if os.path.exists('docs'):
-    shutil.rmtree('docs')
-os.mkdir('docs')
+docs = 'docs'
+
+if os.path.exists(docs):
+    shutil.rmtree(docs)
+os.mkdir(docs)
 
 links = []
 
@@ -66,7 +68,7 @@ for course in courses:
     course_dir = os.path.join(root.name, course['sdir'])
     current_dir = os.getcwd()
     os.chdir(course_dir)
-    docs_dir = os.path.join(current_dir, 'docs', tdir)
+    docs_dir = os.path.join(current_dir, docs, tdir)
     cmd = f"python {current_dir}/LibreLingo-tools/lili.py --course course --html {docs_dir}"
     print(cmd)
     assert os.system(cmd) == 0
@@ -79,7 +81,7 @@ for course in courses:
 current_dir = os.getcwd()
 os.chdir('LibreLingo')
 tdir = 'basque-from-english'
-docs_dir = os.path.join(current_dir, 'docs', tdir)
+docs_dir = os.path.join(current_dir, docs, tdir)
 cmd = f"python {current_dir}/LibreLingo-tools/lili.py --course courses/basque-from-english --html {docs_dir}"
 print(cmd)
 #assert os.system(cmd) == 0
@@ -94,7 +96,7 @@ for tdir in os.listdir('LibreLingo/temporarily_inactive_courses/'):
         continue
     current_dir = os.getcwd()
     os.chdir('LibreLingo')
-    docs_dir = os.path.join(current_dir, 'docs', tdir)
+    docs_dir = os.path.join(current_dir, docs, tdir)
     cmd = f"python {current_dir}/LibreLingo-tools/lili.py --course temporarily_inactive_courses/{tdir} --html {docs_dir}"
     print(cmd)
     assert os.system(cmd) == 0
@@ -125,7 +127,7 @@ html = f"""
   </body>
 </html>
 """
-with open("docs/index.html", 'w') as fh:
+with open(os.path.join(docs, "index.html"), 'w') as fh:
     fh.write(html)
 
 
