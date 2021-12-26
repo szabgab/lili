@@ -55,11 +55,11 @@ def download_course(url, tempdir):
     zf.extractall(path=tempdir.name)
 
 
-def generate_course(sdir, outdir, tdir):
+def generate_course(sdir, outdir, tdir, course_dir):
     current_dir = os.getcwd()
     os.chdir(sdir)
     docs_dir = os.path.join(outdir, tdir)
-    cmd = f"{python} {current_dir}/LibreLingo-tools/lili.py --course course --html {docs_dir}"
+    cmd = f"{python} {current_dir}/LibreLingo-tools/lili.py --course {course_dir} --html {docs_dir}"
     print(cmd)
     success = os.system(cmd) == 0
     os.chdir(current_dir)
@@ -90,34 +90,14 @@ def main():
 
     for course in courses:
         download_course(course['url'], tempdir)
-        links.append( generate_course(sdir=os.path.join(tempdir.name, course['sdir']), outdir=outdir, tdir=course['tdir']) )
+        links.append( generate_course(sdir=os.path.join(tempdir.name, course['sdir']), outdir=outdir, tdir=course['tdir'], course_dir='course') )
 
-    current_dir = os.getcwd()
-    os.chdir('LibreLingo')
-    tdir = 'basque-from-english'
-    docs_dir = os.path.join(outdir, tdir)
-    cmd = f"{python} {current_dir}/LibreLingo-tools/lili.py --course courses/basque-from-english --html {docs_dir}"
-    print(cmd)
-    #assert os.system(cmd) == 0
-    os.system(cmd)
-    with open(os.path.join(docs_dir, 'stats.json')) as fh:
-        count = json.load(fh)
-    links.append(f'''<tr><td><a href="{tdir}">{tdir}</a></td><td>{count["words"]}</td><td>{count["phrases"]}</td></tr>''')
-    os.chdir(current_dir)
+    links.append( generate_course(sdir='LibreLingo', outdir=outdir, tdir='basque-from-english', course_dir='courses/basque-from-english') )
 
     for tdir in os.listdir('LibreLingo/temporarily_inactive_courses/'):
         if tdir == 'basque-from-english':
             continue
-        current_dir = os.getcwd()
-        os.chdir('LibreLingo')
-        docs_dir = os.path.join(outdir, tdir)
-        cmd = f"{python} {current_dir}/LibreLingo-tools/lili.py --course temporarily_inactive_courses/{tdir} --html {docs_dir}"
-        print(cmd)
-        assert os.system(cmd) == 0
-        with open(os.path.join(docs_dir, 'stats.json')) as fh:
-            count = json.load(fh)
-        links.append(f'''<tr><td><a href="{tdir}">{tdir}</a></td><td>{count["words"]}</td><td>{count["phrases"]}</td></tr>''')
-        os.chdir(current_dir)
+        links.append( generate_course(sdir='LibreLingo', outdir=outdir, tdir=tdir, course_dir=f'temporarily_inactive_courses/{tdir}') )
 
     end_time = datetime.datetime.now()
     generate_html(start_time, end_time, links, outdir)
