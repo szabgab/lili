@@ -17,8 +17,8 @@ def get_args():
     args = parser.parse_args()
     return args
 
-def generate_html(start_time, end_time, links, outdir):
 
+def generate_html(start_time, end_time, links, outdir):
     root = os.path.dirname(os.path.abspath(__file__))
     templates_dir = os.path.join(root, 'templates')
     env = Environment( loader = FileSystemLoader(templates_dir) )
@@ -47,6 +47,7 @@ def generate_course(sdir, outdir, tdir, course_dir):
     current_dir = os.getcwd()
     os.chdir(sdir)
     docs_dir = os.path.join(outdir, tdir)
+    python = sys.executable
     cmd = f"{python} {current_dir}/LibreLingo-tools/lili.py --course {course_dir} --html {docs_dir}"
     print(cmd)
     success = os.system(cmd) == 0
@@ -62,8 +63,6 @@ def main():
     courses_file = args.courses
 
     tempdir = tempfile.TemporaryDirectory()
-    root = os.path.dirname(os.path.abspath(__file__))
-
     start_time = datetime.datetime.now()
     with open(courses_file) as fh:
         courses = json.load(fh)
@@ -90,8 +89,6 @@ def main():
     end_time = datetime.datetime.now()
     generate_html(start_time, end_time, links, outdir)
 
-
-python = sys.executable
 
 main()
 
