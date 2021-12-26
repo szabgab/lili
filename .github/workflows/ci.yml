@@ -38,6 +38,7 @@ jobs:
           python -V
           pip install -r requirements.txt
           #pip install -r LibreLingo-tools/requirements.txt
+          pip install jinja2
           cd LibreLingo/apps/librelingo_types; pip install .; cd ../../../
           cd LibreLingo/apps/librelingo_yaml_loader; pip install .; cd ../../../
           cd LibreLingo/apps/librelingo_json_export; pip install .; cd ../../../
