@@ -12,6 +12,7 @@ import tempfile
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--outdir',        required=True, help='path to output directory')
+    parser.add_argument('--courses',       required=True, help='path to courses.json file')
     args = parser.parse_args()
     return args
 
@@ -70,40 +71,14 @@ def generate_course(sdir, outdir, tdir):
 def main():
     args = get_args()
     outdir = os.path.abspath(args.outdir)
+    courses_file = args.courses
 
     tempdir = tempfile.TemporaryDirectory()
     root = os.path.dirname(os.path.abspath(__file__))
 
-
     start_time = datetime.datetime.now()
-
-    courses = [
-        {
-            'url': 'https://github.com/kantord/LibreLingo-ES-from-EN/archive/refs/heads/main.zip',
-            'sdir': 'LibreLingo-ES-from-EN-main',
-            'tdir': 'spanish-from-english',
-        },
-        {
-            'url': 'https://github.com/szabgab/LibreLingo-Judeo-Spanish-from-English/archive/refs/heads/main.zip',
-            'sdir': 'LibreLingo-Judeo-Spanish-from-English-main',
-            'tdir': 'ladino-from-english',
-        },
-        {
-            'url': 'https://github.com/szabgab/LibreLingo-Judeo-Spanish-from-Hebrew/archive/refs/heads/main.zip',
-            'sdir': 'LibreLingo-Judeo-Spanish-from-Hebrew-main',
-            'tdir': 'ladino-from-hebrew',
-        },
-        {
-            'url': 'https://github.com/szabgab/LibreLingo-Judeo-Spanish-from-Spanish/archive/refs/heads/main.zip',
-            'sdir': 'LibreLingo-Judeo-Spanish-from-Spanish-main',
-            'tdir': 'ladino-from-spanish',
-        },
-        {
-            'url': 'https://codeberg.org/Lamdarer/LibreLingo-DE-from-EN/archive/main.zip',
-            'sdir': 'librelingo-de-from-en',
-            'tdir': 'german-from-english',
-        },
-    ]
+    with open(courses_file) as fh:
+        courses = json.load(fh)
 
     print(tempdir.name)
 
