@@ -17,7 +17,7 @@ def get_args():
     return args
 
 def generate_html(start_time, end_time, links, outdir):
-    links_str = '\n'.join(sorted(links))
+    links_str = '\n'.join(sorted([f'''<tr><td><a href="{link['tdir']}">{link['text']}</a></td><td>{link["words"]}</td><td>{link["phrases"]}</td></tr>''' for link in links]))
     html = f"""
     <!DOCTYPE html>
     <html lang="en">
@@ -65,7 +65,7 @@ def generate_course(sdir, outdir, tdir, course_dir):
     os.chdir(current_dir)
     with open(os.path.join(docs_dir, 'stats.json')) as fh:
         count = json.load(fh)
-    return f'''<tr><td><a href="{tdir}">{tdir}</a></td><td>{count["words"]}</td><td>{count["phrases"]}</td></tr>'''
+    return { 'tdir': tdir, 'text': tdir, 'words': count["words"], 'phrases': count["phrases"], 'success': success }
 
 
 def main():
