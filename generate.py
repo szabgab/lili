@@ -8,6 +8,7 @@ import zipfile
 import shutil
 import tempfile
 
+
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--outdir',        required=True, help='path to output directory')
@@ -39,6 +40,32 @@ def generate_html(start_time, end_time, links, outdir):
         fh.write(html)
 
 
+def download_course(url, tempdir):
+    # download zip file
+    res = requests.get(url, stream=True)
+    filename = os.path.join(tempdir.name, "course.zip")
+    if res.status_code == 200:
+        with open(filename, 'wb') as fh:
+            res.raw.decode_content
+            shutil.copyfileobj(res.raw, fh)
+
+    # unzip
+    zf = zipfile.ZipFile(filename)
+    zf.extractall(path=tempdir.name)
+
+
+def generate_course(sdir, outdir, tdir):
+    current_dir = os.getcwd()
+    os.chdir(sdir)
+    docs_dir = os.path.join(outdir, tdir)
+    cmd = f"{python} {current_dir}/LibreLingo-tools/lili.py --course course --html {docs_dir}"
+    print(cmd)
+    success = os.system(cmd) == 0
+    os.chdir(current_dir)
+    with open(os.path.join(docs_dir, 'stats.json')) as fh:
+        count = json.load(fh)
+    return f'''<tr><td><a href="{tdir}">{tdir}</a></td><td>{count["words"]}</td><td>{count["phrases"]}</td></tr>'''
+
 
 def main():
     args = get_args()
@@ -47,7 +74,6 @@ def main():
     tempdir = tempfile.TemporaryDirectory()
     root = os.path.dirname(os.path.abspath(__file__))
 
-    python = sys.executable
 
     start_time = datetime.datetime.now()
 
@@ -88,34 +114,8 @@ def main():
     links = []
 
     for course in courses:
-        tdir = course['tdir']
-        #download zip file
-        res = requests.get(course['url'], stream=True)
-        filename = os.path.join(tempdir.name, "course.zip")
-        if res.status_code == 200:
-            with open(filename, 'wb') as fh:
-                res.raw.decode_content
-                shutil.copyfileobj(res.raw, fh)
-
-        #unzip it
-        zf = zipfile.ZipFile(filename)
-        zf.extractall(path=tempdir.name)
-
-
-        # generate file
-        #course_dir = os.path.join(tempdir.name, course['sdir'], 'course')
-        course_dir = os.path.join(tempdir.name, course['sdir'])
-        current_dir = os.getcwd()
-        os.chdir(course_dir)
-        docs_dir = os.path.join(outdir, tdir)
-        cmd = f"{python} {current_dir}/LibreLingo-tools/lili.py --course course --html {docs_dir}"
-        print(cmd)
-        assert os.system(cmd) == 0
-        os.chdir(current_dir)
-        with open(os.path.join(docs_dir, 'stats.json')) as fh:
-            count = json.load(fh)
-        links.append(f'''<tr><td><a href="{tdir}">{tdir}</a></td><td>{count["words"]}</td><td>{count["phrases"]}</td></tr>''')
-
+        download_course(course['url'], tempdir)
+        links.append( generate_course(sdir=os.path.join(tempdir.name, course['sdir']), outdir=outdir, tdir=course['tdir']) )
 
     current_dir = os.getcwd()
     os.chdir('LibreLingo')
@@ -146,6 +146,9 @@ def main():
 
     end_time = datetime.datetime.now()
     generate_html(start_time, end_time, links, outdir)
+
+
+python = sys.executable
 
 main()
 
