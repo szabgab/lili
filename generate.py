@@ -1,4 +1,5 @@
 import datetime
+import json
 import requests
 import os
 import zipfile
@@ -7,7 +8,7 @@ import tempfile
 
 root = tempfile.TemporaryDirectory()
 
-now = datetime.datetime.now()
+start_time = datetime.datetime.now()
 
 courses = [
     {
@@ -65,7 +66,9 @@ for course in courses:
     current_dir = os.getcwd()
     os.chdir(course_dir)
     docs_dir = os.path.join(current_dir, 'docs', course['tdir'])
-    assert os.system(f"python {current_dir}/LibreLingo-tools/lili.py --course course --html {docs_dir}") == 0
+    cmd = f"python {current_dir}/LibreLingo-tools/lili.py --course course --html {docs_dir}"
+    print(cmd)
+    assert os.system(cmd) == 0
     os.chdir(current_dir)
     links += f'''<li><a href="{course['tdir']}">{course['tdir']}</a></li>\n'''
 
@@ -74,9 +77,9 @@ os.chdir('LibreLingo')
 tdir = 'basque-from-english'
 docs_dir = os.path.join(current_dir, 'docs', tdir)
 cmd = f"python {current_dir}/LibreLingo-tools/lili.py --course courses/basque-from-english --html {docs_dir}"
-#print(cmd)
+print(cmd)
 #assert os.system(cmd) == 0
-assert os.system(cmd)
+os.system(cmd)
 links += f'''<li><a href="basque-from-english">basque-from-english</a></li>\n'''
 os.chdir(current_dir)
 
@@ -87,11 +90,14 @@ for tdir in os.listdir('LibreLingo/temporarily_inactive_courses/'):
     os.chdir('LibreLingo')
     docs_dir = os.path.join(current_dir, 'docs', tdir)
     cmd = f"python {current_dir}/LibreLingo-tools/lili.py --course temporarily_inactive_courses/{tdir} --html {docs_dir}"
-    #print(cmd)
+    print(cmd)
     assert os.system(cmd) == 0
-    links += f'''<li><a href="{tdir}">{tdir}</a></li>\n'''
+    with open(os.path.join(docs_dir, 'stats.json')) as fh:
+        count = json.load(fh)
+    links += f'''<tr><td><a href="{tdir}">{tdir}</a></td><td>{count["words"]}</td><td>{count["phrases"]}</td></tr>\n'''
     os.chdir(current_dir)
 
+end_time = datetime.datetime.now()
 
 html = f"""
 <html>
@@ -100,10 +106,11 @@ html = f"""
   </head>
   <body>
     <h1><a href="https://librelingo.app/">LibreLingo courses</a></h1>
-    <ul>
+    <table>
+        <tr><th>Course</th><th>Words</th><th>Phrases</th></tr>
         {links}
-    </ul>
-    <div>Generated at {now}</div>
+    </table>
+    <div>Generated at {start_time} Elapsed time: {(end_time-start_time).seconds} seconds</div>
   </body>
 </html>
 """
