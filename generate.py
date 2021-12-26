@@ -44,9 +44,10 @@ if os.path.exists('docs'):
     shutil.rmtree('docs')
 os.mkdir('docs')
 
-links = ''
+links = []
 
 for course in courses:
+    tdir = course['tdir']
     #download zip file
     res = requests.get(course['url'], stream=True)
     filename = os.path.join(root.name, "course.zip")
@@ -65,12 +66,15 @@ for course in courses:
     course_dir = os.path.join(root.name, course['sdir'])
     current_dir = os.getcwd()
     os.chdir(course_dir)
-    docs_dir = os.path.join(current_dir, 'docs', course['tdir'])
+    docs_dir = os.path.join(current_dir, 'docs', tdir)
     cmd = f"python {current_dir}/LibreLingo-tools/lili.py --course course --html {docs_dir}"
     print(cmd)
     assert os.system(cmd) == 0
     os.chdir(current_dir)
-    links += f'''<li><a href="{course['tdir']}">{course['tdir']}</a></li>\n'''
+    with open(os.path.join(docs_dir, 'stats.json')) as fh:
+        count = json.load(fh)
+    links.append(f'''<tr><td><a href="{tdir}">{tdir}</a></td><td>{count["words"]}</td><td>{count["phrases"]}</td></tr>''')
+
 
 current_dir = os.getcwd()
 os.chdir('LibreLingo')
@@ -80,7 +84,9 @@ cmd = f"python {current_dir}/LibreLingo-tools/lili.py --course courses/basque-fr
 print(cmd)
 #assert os.system(cmd) == 0
 os.system(cmd)
-links += f'''<li><a href="basque-from-english">basque-from-english</a></li>\n'''
+with open(os.path.join(docs_dir, 'stats.json')) as fh:
+    count = json.load(fh)
+links.append(f'''<tr><td><a href="{tdir}">{tdir}</a></td><td>{count["words"]}</td><td>{count["phrases"]}</td></tr>''')
 os.chdir(current_dir)
 
 for tdir in os.listdir('LibreLingo/temporarily_inactive_courses/'):
@@ -94,10 +100,11 @@ for tdir in os.listdir('LibreLingo/temporarily_inactive_courses/'):
     assert os.system(cmd) == 0
     with open(os.path.join(docs_dir, 'stats.json')) as fh:
         count = json.load(fh)
-    links += f'''<tr><td><a href="{tdir}">{tdir}</a></td><td>{count["words"]}</td><td>{count["phrases"]}</td></tr>\n'''
+    links.append(f'''<tr><td><a href="{tdir}">{tdir}</a></td><td>{count["words"]}</td><td>{count["phrases"]}</td></tr>''')
     os.chdir(current_dir)
 
 end_time = datetime.datetime.now()
+links_str = '\n'.join(sorted(links))
 
 html = f"""
 <html>
@@ -108,7 +115,7 @@ html = f"""
     <h1><a href="https://librelingo.app/">LibreLingo courses</a></h1>
     <table>
         <tr><th>Course</th><th>Words</th><th>Phrases</th></tr>
-        {links}
+        {links_str}
     </table>
     <div>Generated at {start_time} Elapsed time: {(end_time-start_time).seconds} seconds</div>
   </body>
