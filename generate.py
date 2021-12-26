@@ -2,11 +2,14 @@ import datetime
 import json
 import requests
 import os
+import sys
 import zipfile
 import shutil
 import tempfile
 
 root = tempfile.TemporaryDirectory()
+
+python = sys.executable
 
 start_time = datetime.datetime.now()
 
@@ -69,7 +72,7 @@ for course in courses:
     current_dir = os.getcwd()
     os.chdir(course_dir)
     docs_dir = os.path.join(current_dir, docs, tdir)
-    cmd = f"python {current_dir}/LibreLingo-tools/lili.py --course course --html {docs_dir}"
+    cmd = f"{python} {current_dir}/LibreLingo-tools/lili.py --course course --html {docs_dir}"
     print(cmd)
     assert os.system(cmd) == 0
     os.chdir(current_dir)
@@ -82,7 +85,7 @@ current_dir = os.getcwd()
 os.chdir('LibreLingo')
 tdir = 'basque-from-english'
 docs_dir = os.path.join(current_dir, docs, tdir)
-cmd = f"python {current_dir}/LibreLingo-tools/lili.py --course courses/basque-from-english --html {docs_dir}"
+cmd = f"{python} {current_dir}/LibreLingo-tools/lili.py --course courses/basque-from-english --html {docs_dir}"
 print(cmd)
 #assert os.system(cmd) == 0
 os.system(cmd)
@@ -97,7 +100,7 @@ for tdir in os.listdir('LibreLingo/temporarily_inactive_courses/'):
     current_dir = os.getcwd()
     os.chdir('LibreLingo')
     docs_dir = os.path.join(current_dir, docs, tdir)
-    cmd = f"python {current_dir}/LibreLingo-tools/lili.py --course temporarily_inactive_courses/{tdir} --html {docs_dir}"
+    cmd = f"{python} {current_dir}/LibreLingo-tools/lili.py --course temporarily_inactive_courses/{tdir} --html {docs_dir}"
     print(cmd)
     assert os.system(cmd) == 0
     with open(os.path.join(docs_dir, 'stats.json')) as fh:
