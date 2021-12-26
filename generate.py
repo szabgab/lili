@@ -7,6 +7,7 @@ import sys
 import zipfile
 import shutil
 import tempfile
+from jinja2 import Environment, FileSystemLoader
 
 
 def get_args():
@@ -17,26 +18,13 @@ def get_args():
     return args
 
 def generate_html(start_time, end_time, links, outdir):
-    links_str = '\n'.join(sorted([f'''<tr><td><a href="{link['tdir']}">{link['text']}</a></td><td>{link["words"]}</td><td>{link["phrases"]}</td></tr>''' for link in links]))
-    html = f"""
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
-      <head>
-        <title>LibreLingo courses</title>
-      </head>
-      <body>
-        <h1><a href="https://librelingo.app/">LibreLingo courses</a></h1>
-        <table>
-            <tr><th>Course</th><th>Words</th><th>Phrases</th></tr>
-            {links_str}
-        </table>
-        <div>Generated at {start_time} Elapsed time: {(end_time-start_time).seconds} seconds</div>
-      </body>
-    </html>
-    """
+
+    root = os.path.dirname(os.path.abspath(__file__))
+    templates_dir = os.path.join(root, 'templates')
+    env = Environment( loader = FileSystemLoader(templates_dir) )
+    template = env.get_template('courses.html')
+    html = template.render(start_time=start_time, end_time=end_time, links=links)
+
     with open(os.path.join(outdir, "index.html"), 'w') as fh:
         fh.write(html)
 
