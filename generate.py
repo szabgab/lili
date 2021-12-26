@@ -7,7 +7,7 @@ import zipfile
 import shutil
 import tempfile
 
-root = tempfile.TemporaryDirectory()
+tempdir = tempfile.TemporaryDirectory()
 
 python = sys.executable
 
@@ -41,7 +41,7 @@ courses = [
     },
 ]
 
-print(root.name)
+print(tempdir.name)
 
 docs = 'docs'
 
@@ -55,7 +55,7 @@ for course in courses:
     tdir = course['tdir']
     #download zip file
     res = requests.get(course['url'], stream=True)
-    filename = os.path.join(root.name, "course.zip")
+    filename = os.path.join(tempdir.name, "course.zip")
     if res.status_code == 200:
         with open(filename, 'wb') as fh:
             res.raw.decode_content
@@ -63,12 +63,12 @@ for course in courses:
 
     #unzip it
     zf = zipfile.ZipFile(filename)
-    zf.extractall(path=root.name)
+    zf.extractall(path=tempdir.name)
 
 
     # generate file
-    #course_dir = os.path.join(root.name, course['sdir'], 'course')
-    course_dir = os.path.join(root.name, course['sdir'])
+    #course_dir = os.path.join(tempdir.name, course['sdir'], 'course')
+    course_dir = os.path.join(tempdir.name, course['sdir'])
     current_dir = os.getcwd()
     os.chdir(course_dir)
     docs_dir = os.path.join(current_dir, docs, tdir)
