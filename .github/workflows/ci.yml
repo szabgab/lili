@@ -2,8 +2,8 @@ name: CI
 
 on:
   push:
-  schedule:
-    - cron: '9 * * * *'
+#  schedule:
+#    - cron: '9 * * * *'
   workflow_dispatch:
 
 jobs:
