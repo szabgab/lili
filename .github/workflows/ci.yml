@@ -20,12 +20,6 @@ jobs:
     - name: Checkout this repo
       uses: actions/checkout@v2
 
-    - name: Checkout the LibreLingo tools
-      uses: actions/checkout@v2
-      with:
-        repository: 'szabgab/LibreLingo-tools'
-        path: LibreLingo-tools
-
     - name: Checkout the LibreLingo
       uses: actions/checkout@v2
       with:
@@ -36,7 +30,6 @@ jobs:
     - name: Install dependencies
       run: |
           python -V
-          #pip install -r LibreLingo-tools/requirements.txt
           pip install requests
           pip install jinja2
           cd LibreLingo/apps/librelingo_types; pip install .; cd ../../../
@@ -45,7 +38,7 @@ jobs:
 
     - name: Generate HTML pages
       run: |
-          python LibreLingo-tools/generate.py --outdir docs --courses LibreLingo-tools/courses.json
+          python LibreLingo/tools/generate.py --outdir docs --courses LibreLingo/tools/courses.json
 
     - name: Commit new files
       if: github.repository == 'szabgab/lili'
