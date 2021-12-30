@@ -38,7 +38,7 @@ jobs:
 
     - name: Generate HTML pages
       run: |
-          python LibreLingo/tools/generate.py --outdir docs --courses LibreLingo/tools/courses.json
+          python LibreLingo/apps/tools/generate.py --outdir docs --courses LibreLingo/apps/tools/courses.json
 
     - name: Commit new files
       if: github.repository == 'szabgab/lili'
