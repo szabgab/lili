@@ -71,18 +71,20 @@ $(document).ready(function(){
 
     var translate = function() {
         const original = $("#input-text").val();
-        const words = original.split(" ");
+        const cleaned = original.replace(/"';,!?/g, " ");
+        const words = cleaned.split(" ");
         var html = "<table>";
         html += "<tr><th>Word</th><th>Translations</th></tr>";
         for (var ix = 0; ix < words.length; ix++) {
             if (words[ix] == "") {
                 continue;
             }
-            var translation = target_to_source[words[ix]];
+            var word = words[ix].toLowerCase()
+            var translation = target_to_source[word];
             if (translation) {
-                html += '<tr><td>' + words[ix] + "</td><td>" + translation + "</td></tr>";
+                html += '<tr><td><a href="target/' + word + '.html">' + words[ix] + '</a></td><td>' + translation + '</td></tr>';
             } else {
-                html += '<tr class="missing"><td>' + words[ix] + "</td><td>" + "</td></tr>";
+                html += '<tr class="missing"><td>' + words[ix] + '</td><td>' + '</td></tr>';
             }
         }
         html += "</table>";
