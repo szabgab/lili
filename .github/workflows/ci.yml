@@ -53,5 +53,5 @@ jobs:
         git add .
         #if [ "$GIT_STATUS" != "" ] && [ "$GIT_COUNT" != "1" ]; then git commit -m "Automated Web page generation"; fi
         #if [ "$GIT_STATUS" != "" ] && [ "$GIT_COUNT" != "1" ]; then git push; fi
-        if [ $GIT_COUNT -gt 1 ]; then git commit -m "Automated Web page generation"; fi
-        if [ $GIT_COUNT -gt 1 ]; then git push; fi
+        if [ $GIT_COUNT -gt 3 ]; then git commit -m "Automated Web page generation"; fi
+        if [ $GIT_COUNT -gt 3 ]; then git push; fi
