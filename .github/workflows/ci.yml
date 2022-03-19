@@ -23,7 +23,7 @@ jobs:
     - name: Checkout the LibreLingo
       uses: actions/checkout@v2
       with:
-        repository: 'kantord/LibreLingo'
+        repository: 'LibreLingo/LibreLingo'
         path: LibreLingo
 
 
