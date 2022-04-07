@@ -40,6 +40,7 @@ jobs:
       run: |
           python LibreLingo/apps/tools/librelingo_tools/generate.py --outdir docs --courses LibreLingo/config/courses.json --log --history history.json
           echo lili.szabgab.com > docs/CNAME
+          cp redirect_ladino.html docs/ladino-from-english/index.html
 
     - name: Commit new files
       if: github.repository == 'szabgab/lili'
