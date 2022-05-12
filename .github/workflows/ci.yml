@@ -40,6 +40,7 @@ jobs:
       run: |
           python LibreLingo/apps/tools/librelingo_tools/generate.py --outdir docs --courses LibreLingo/config/courses.json --log --history history.json
           echo lili.szabgab.com > docs/CNAME
+          mkdir -p docs/ladino-from-english/
           cp redirect_ladino.html docs/ladino-from-english/index.html
           cp redirect_ladino.html docs/ladino-from-english/converter.html
 
